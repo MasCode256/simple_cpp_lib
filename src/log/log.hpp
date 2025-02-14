@@ -5,6 +5,8 @@
 #include <type_traits>
 #include <ctime>
 
+#define ENDL '\n'
+
 namespace log
 {
 	class _out
@@ -76,7 +78,7 @@ namespace log
 		}
 
 		template <typename Type>
-		_out &operator<<(const Type &val)
+		inline _out &operator<<(const Type &val)
 		{
 			print_time();
 			std::cout << val;
