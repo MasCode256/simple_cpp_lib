@@ -1,91 +1,97 @@
 #ifndef LOG_SRC
 #define LOG_SRC
 
-#include <iostream>
 #include <type_traits>
+#include <iostream>
+#include <string>
 #include <ctime>
 
-#define ENDL '\n'
+using namespace std;
 
 namespace log
 {
-	class _out
+	namespace local
 	{
-	private:
-		bool timePrinted;
-
-		inline void print_time()
+		void print_time()
 		{
-			if (!timePrinted)
-			{
-				std::time_t now = std::time(nullptr);
-				std::tm *local_time = std::localtime(&now);
-				char buffer[20];
-				std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", local_time);
-				std::cout << buffer << " ";
-			}
+			std::time_t now = std::time(nullptr);
+			std::tm *local_time = std::localtime(&now);
+			char buffer[20];
+			std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", local_time);
+			std::cout << buffer << " ";
 		}
+	}
 
-		void print_str(const std::string &str)
-		{
-			print_time();
-			if (str == "\n")
-			{
-				timePrinted = false;
-			}
-			else
-			{
-				timePrinted = true;
-			}
-			std::cout << str;
-		}
+	/*
+	template <typename T>
+	void print(T arg)
+	{
+		cout << arg << endl;
+	}
 
-		void print_str(const char c)
-		{
-			print_time();
-			if (c == '\n')
-			{
-				timePrinted = false;
-			}
-			else
-			{
-				timePrinted = true;
-			}
-			std::cout << c;
-		}
+	template <typename T, typename... Args>
+	void print(T first, Args... args)
+	{
+		cout << first << " "; // Печатаем первый аргумент
+		print(args...);		  // Рекурсивно вызываем print для остальных аргументов
+	}
 
-	public:
-		_out() : timePrinted(false)
-		{
-		}
+	template <typename T, typename... Args>
+	void println(T first, Args... args)
+	{
+		cout << first << " "; // Печатаем первый аргумент
+		print(args...);		  // Рекурсивно вызываем print для остальных аргументов
+		cout << endl;
+	}*/
 
-		inline _out &operator<<(const std::string &str)
-		{
-			print_str(str);
-			return *this;
-		}
+	template <typename T>
+	void print(T arg)
+	{
+		local::print_time();
+		cout << arg;
+	}
 
-		inline _out &operator<<(const char *c)
-		{
-			print_str(c);
-			return *this;
-		}
+	template <typename T>
+	void println(T arg)
+	{
+		local::print_time();
+		cout << arg << endl;
+	}
 
-		inline _out &operator<<(const char c)
-		{
-			print_str(c);
-			return *this;
-		}
+	template <typename T>
+	void _print(T arg)
+	{
+		cout << arg;
+	}
 
-		template <typename Type>
-		inline _out &operator<<(const Type &val)
-		{
-			print_time();
-			std::cout << val;
-			return *this;
-		}
+	template <typename T>
+	void _println(T arg)
+	{
+		cout << arg << endl;
+	}
 
-	} out;
+	template <typename T, typename... Args>
+	void print(T first, Args... args)
+	{
+		local::print_time();
+		cout << first << " "; // Печатаем первый аргумент
+		_print(args...);	  // Рекурсивно вызываем print для остальных аргументов
+	}
+
+	template <typename T, typename... Args>
+	void _print(T first, Args... args)
+	{
+		cout << first << " "; // Печатаем первый аргумент
+		_print(args...);	  // Рекурсивно вызываем print для остальных аргументов
+	}
+
+	template <typename T, typename... Args>
+	void println(T first, Args... args)
+	{
+		local::print_time();
+		cout << first << " "; // Печатаем первый аргумент
+		_println(args...);	  // Рекурсивно вызываем print для остальных аргументов
+	}
 }
 
 #endif
