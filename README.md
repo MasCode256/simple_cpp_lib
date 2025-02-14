@@ -1,1 +1,1 @@
-# simple_c-_lib
+readme in developing
